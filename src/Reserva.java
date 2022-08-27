@@ -12,7 +12,11 @@ public class Reserva {
     public Reserva() {
     }
 
-    public Reserva(Integer numQuarto, Date entrada, Date saida) {
+    public Reserva(Integer numQuarto, Date entrada, Date saida) throws ReservaException {
+    // sempre bom já tratar exceções no começo do método
+        if( !saida.after(entrada)){
+            throw new ReservaException("A data de saída deve ser posterior a data de entrada.");
+        }
         this.numQuarto = numQuarto;
         this.entrada = entrada;
         this.saida = saida;
@@ -40,16 +44,16 @@ public class Reserva {
         return  TimeUnit.DAYS.convert(diferenca,TimeUnit.MILLISECONDS);
     }
 
-    public String atualizarDatas(Date entrada,Date saida){
+    public void atualizarDatas(Date entrada,Date saida) throws ReservaException {
+        //lanço a exceção no método para ser tratar no Principal pelo catch
         Date agora=new Date(); // a reserva só pode ser alterada para datas futuras
         if(entrada.before(agora)){
-           return "Datas de atualização devem ser futuras.";}
+            //trata o uso de argumentos inválidos para chamar ela fazer um catch no Programa
+           throw new ReservaException("Datas de atualização devem ser futuras.");}
         if (!saida.after(entrada)){
-            return "Data de saída incorreta, deve ser escolhida uma data posterior a de entrada.";}
-
+            throw new ReservaException("Data de saída incorreta, deve ser escolhida uma data posterior a de entrada.");}
         this.entrada = entrada;
         this.saida = saida;
-        return null;
     }
 
     private static SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
